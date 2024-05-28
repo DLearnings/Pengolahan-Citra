@@ -8,6 +8,18 @@ def convert_rgb_to_hsv(image):
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     return hsv_image
 
+# Fungsi untuk menghitung histogram
+def calculate_histogram(image):
+    color = ('b', 'g', 'r')
+    plt.figure()
+    plt.title("Color Histogram")
+    plt.xlabel("Bins")
+    plt.ylabel("# of Pixels")
+    for i, col in enumerate(color):
+        hist = cv2.calcHist([image], [i], None, [256], [0, 256])
+        plt.plot(hist, color=col)
+        plt.xlim([0, 256])
+    return plt
 
 # Fungsi untuk mengatur kecerahan dan kontras
 def adjust_brightness_contrast(image, brightness=0, contrast=0):
@@ -71,6 +83,11 @@ if uploaded_file is not None:
         hsv_image = convert_rgb_to_hsv(image)
         st.image(hsv_image, caption='HSV Image', use_column_width=True, channels="HSV")
 
+    # Calculate Histogram
+    if st.button('Calculate Histogram'):
+        st.write("Histogram:")
+        plt = calculate_histogram(image)
+        st.pyplot(plt)
 
     # Adjust Brightness and Contrast
     brightness = st.slider('Brightness', 0, 100, 50)
